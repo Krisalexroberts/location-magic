@@ -67,7 +67,7 @@ then
 		echo "Backing up crontab.."
 		crontab -l > crontab_$(whoami).backup
 		echo "Adding script to run every hour"
-		($(crontab -l > file; echo "0 * * * * cd /usr/local/bin/ && ./locationmagic.sh -locate $platform $token" >> file | sort file | uniq file | crontab -))
+		($(crontab -l > file; echo "0 * * * * cd /usr/local/bin/ &&  ./locationmagic.sh -locate $platform $token" >> file | sort file | uniq file | crontab -))
 		echo "All done!"
 		echo $stamp" Installed Successfully" >> $log_file
 	fi
@@ -77,7 +77,7 @@ then
 		list=($(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s |  egrep -o '([a-f0-9]{2}:){5}[a-f0-9]{2}'))
 	elif [ "$platform" = "linux" ]; then
 		interface=($(ifconfig | grep wlan | awk '{print $1}'))
-		list=($(iwlist "$interface" scanning | grep Address | awk '{print $5}'))
+		list=($(sudo iwlist "$interface" scanning | grep Address | awk '{print $5}'))
 	else
 		echo "Invalid platform / OS selected.. Proceeding with IP address based location"
 		list[0]=""
